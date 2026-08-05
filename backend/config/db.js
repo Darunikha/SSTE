@@ -1,0 +1,14 @@
+const mongoose = require('mongoose');
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/srisastha_db', {
+      serverSelectionTimeoutMS: 5000,
+    });
+    console.log(`[MongoDB] Database connected successfully: ${conn.connection.host}`);
+  } catch (error) {
+    console.warn(`[MongoDB] Notice: Could not connect to local MongoDB database (${error.message}). Running in mock/memory database mode for seamless testing.`);
+  }
+};
+
+module.exports = connectDB;

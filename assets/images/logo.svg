@@ -1,0 +1,26 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer circle -->
+  <circle cx="100" cy="95" r="90" fill="none" stroke="#5a2d82" stroke-width="7"/>
+  
+  <!-- Hexagon with S -->
+  <g>
+    <!-- Hexagon -->
+    <polygon points="100,20 125,35 125,65 100,80 75,65 75,35" 
+             fill="none" stroke="#5a2d82" stroke-width="2"/>
+    
+    <!-- S inside hexagon -->
+    <text x="100" y="53" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="900" 
+          fill="#5a2d82" text-anchor="middle" dominant-baseline="middle">S</text>
+  </g>
+  
+  <!-- Horizontal line divider -->
+  <line x1="60" y1="100" x2="140" y2="100" stroke="#5a2d82" stroke-width="2"/>
+  
+  <!-- STE text -->
+  <text x="100" y="135" font-family="Arial, Helvetica, sans-serif" font-size="50" font-weight="900" 
+        fill="#5a2d82" text-anchor="middle" dominant-baseline="middle" letter-spacing="-1">STE</text>
+  
+  <!-- QUALITY FIRST tagline -->
+  <text x="100" y="165" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" 
+        fill="#a88fd1" text-anchor="middle" letter-spacing="2">QUALITY FIRST</text>
+</svg>

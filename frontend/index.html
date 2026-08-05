@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sri Sastha Textile Engineering | Precision Engineering Solutions</title>
+  <meta name="description" content="Sri Sastha Textile Engineering delivers dependable spare parts, electronic servicing, and industrial automation solutions in Coimbatore, Tamil Nadu." />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #7c5cdb;
+      --primary-light: #9b7ed9;
+      --primary-lighter: #c4a8f0;
+      --accent: #a78bfa;
+      --dark: #1f1f2e;
+      --light: #f5f3ff;
+      --muted: #6b7280;
+      --white: #ffffff;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--dark);
+      background: #fff;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    nav {
+      background: var(--white);
+      padding: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .logo svg {
+      height: 50px;
+      width: auto;
+      transition: transform 0.3s;
+    }
+
+    .logo svg:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+      padding: 80px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 30px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--white);
+      color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+    }
+
+    .btn-secondary:hover {
+      background: var(--white);
+      color: var(--primary);
+    }
+
+    /* Form Section */
+    .form-section {
+      background: var(--light);
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 400px;
+    }
+
+    .form-section h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--dark);
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e0d4f7;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(124, 92, 219, 0.1);
+    }
+
+    .form-submit {
+      width: 100%;
+      background: var(--primary);
+      color: var(--white);
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .form-submit:hover {
+      background: var(--primary-light);
+    }
+
+    /* Services Section */
+    section {
+      padding: 60px 24px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title h2 {
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .service-card {
+      background: var(--white);
+      border: 2px solid #f0ebf8;
+      border-radius: 12px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .service-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 12px 24px rgba(124, 92, 219, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .service-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+    }
+
+    .service-card h3 {
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Stats Section */
+    .stats-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+      padding: 60px 24px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-number {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    /* Team Section */
+    .team-section {
+      background: var(--light);
+      padding: 60px 24px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .team-card {
+      background: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+
+    .team-card:hover {
+      box-shadow: 0 8px 24px rgba(124, 92, 219, 0.2);
+      transform: translateY(-4px);
+    }
+
+    .team-image {
+      width: 100%;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--accent) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-size: 3rem;
+    }
+
+    .team-info {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .team-info h4 {
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .team-info p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      padding: 60px 24px;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .faq-item {
+      background: var(--light);
+      border-left: 4px solid var(--primary);
+      padding: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .faq-item:hover {
+      background: #f0ebf8;
+    }
+
+    .faq-item h4 {
+      color: var(--primary);
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+    }
+
+    .faq-item p {
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .faq-item.active p {
+      display: block;
+    }
+
+    .faq-image {
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--accent) 100%);
+      border-radius: 12px;
+    }
+
+    /* Newsletter Section */
+    .newsletter-section {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: var(--white);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .newsletter-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .newsletter-content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .newsletter-form button {
+      padding: 12px 24px;
+      background: var(--white);
+      color: var(--primary);
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .newsletter-form button:hover {
+      transform: scale(1.05);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: var(--white);
+      padding: 40px 24px;
+      margin-top: 60px;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .footer-section h4 {
+      color: var(--primary-lighter);
+      margin-bottom: 16px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 10px;
+    }
+
+    .footer-section a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-section a:hover {
+      color: var(--primary-lighter);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
+    }
+
+    @media (max-width: 768px) {
+      .hero-content { grid-template-columns: 1fr; }
+      .nav-links { gap: 16px; }
+      .hero h1 { font-size: 1.8rem; }
+      .faq-grid { grid-template-columns: 1fr; }
+      .newsletter-form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <!-- Navigation -->
+    <nav>
+      <div class="nav-container">
+        <a href="#" class="logo">
+          <svg viewBox="0 0 200 240" width="50" height="60" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="95" r="90" fill="none" stroke="#7c5cdb" stroke-width="7"/>
+            <g>
+              <polygon points="100,20 125,35 125,65 100,80 75,65 75,35" fill="none" stroke="#7c5cdb" stroke-width="2"/>
+              <text x="100" y="53" font-family="Arial" font-size="38" font-weight="900" fill="#7c5cdb" text-anchor="middle" dominant-baseline="middle">S</text>
+            </g>
+            <line x1="60" y1="100" x2="140" y2="100" stroke="#7c5cdb" stroke-width="2"/>
+            <text x="100" y="135" font-family="Arial" font-size="50" font-weight="900" fill="#7c5cdb" text-anchor="middle" dominant-baseline="middle">STE</text>
+            <text x="100" y="165" font-family="Arial" font-size="11" font-weight="700" fill="#a78bfa" text-anchor="middle" letter-spacing="2">QUALITY FIRST</text>
+          </svg>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#expertise">Expertise</a></li>
+          <li><a href="#team">Team</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-content">
+        <div>
+          <h1>Precision Engineering Solutions On Time, Every Time.</h1>
+          <p>Sri Sastha Textile Engineering delivers dependable spare parts, electronic servicing, and industrial automation solutions to keep your machinery running at peak performance.</p>
+          <div class="cta-buttons">
+            <a href="#contact" class="btn btn-primary">Get Started</a>
+            <a href="#services" class="btn btn-secondary">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Services Section -->
+    <section id="services">
+      <div class="container">
+        <div class="section-title">
+          <h2>Our Core Services</h2>
+          <p>Complete textile machinery support solutions</p>
+        </div>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">⚙️</div>
+            <h3>Compact Spinning Spares</h3>
+            <p>Precision-engineered spare parts including sensors, gears, pins, and suction components for optimal spinning efficiency.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🔧</div>
+            <h3>Electronic Servicing</h3>
+            <p>PCB repairs, VFD servicing, drive support for Siemens, Mitsubishi, Danfoss, and ABB systems with quick turnaround.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">📱</div>
+            <h3>HMI Display Solutions</h3>
+            <p>Professional HMI conversions, display upgrades, and custom safety covers for modern textile machinery systems.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🤖</div>
+            <h3>Industrial Automation</h3>
+            <p>Customized automation solutions, control panel diagnostics, and machine interface upgrades for enhanced productivity.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">🛡️</div>
+            <h3>Preventive Maintenance</h3>
+            <p>Comprehensive maintenance support designed to minimize downtime and extend the life of your equipment.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-icon">💡</div>
+            <h3>Technical Support</h3>
+            <p>24/7 responsive technical assistance and expert troubleshooting for all your textile machinery needs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-icon">✓</div>
+            <div class="stat-number">50+</div>
+            <div class="stat-label">Years Combined Experience</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">✓</div>
+            <div class="stat-number">1K+</div>
+            <div class="stat-label">Machines Serviced</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">✓</div>
+            <div class="stat-number">2.5K+</div>
+            <div class="stat-label">Happy Customers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-icon">✓</div>
+            <div class="stat-number">99%</div>
+            <div class="stat-label">Customer Satisfaction</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Expertise Section -->
+    <section id="expertise">
+      <div class="container">
+        <div class="section-title">
+          <h2>Our Expertise</h2>
+          <p>Specialized knowledge across the textile machinery industry</p>
+        </div>
+        <div class="services-grid">
+          <div class="service-card">
+            <h3>Compact Spinning Systems</h3>
+            <p>Deep expertise in compact spinning technology including sensors, gears, and pneumatic components for Rieter, Trützschler, Lakshmi, and other leading systems.</p>
+          </div>
+          <div class="service-card">
+            <h3>Drive & Inverter Support</h3>
+            <p>Specialized servicing for VFDs, Siemens drives, Mitsubishi inverters, Danfoss, and ABB systems with factory-certified expertise.</p>
+          </div>
+          <div class="service-card">
+            <h3>Industrial Electronics</h3>
+            <p>PCB diagnostics, repairs, and component replacement for textile machinery control systems and HMI displays.</p>
+          </div>
+          <div class="service-card">
+            <h3>Machine Integration</h3>
+            <p>Seamless integration of new components, display upgrades, and automation enhancements with minimal production disruption.</p>
+          </div>
+          <div class="service-card">
+            <h3>Technical Consulting</h3>
+            <p>Expert guidance on equipment optimization, upgrade planning, and best practices for maximum machinery performance.</p>
+          </div>
+          <div class="service-card">
+            <h3>Rapid Response Support</h3>
+            <p>Quick diagnostic and repair services to minimize downtime and keep your operations running smoothly every day.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Request A Quote Section -->
+    <section id="contact" style="padding: 60px 24px; background: #f5f3ff;">
+      <div class="container">
+        <div class="form-section" style="max-width: 600px; margin: 0 auto; background: #f5f3ff; padding: 0;">
+          <h3 style="text-align: center; margin-bottom: 30px;">Request A Quote</h3>
+          <form onsubmit="event.preventDefault(); alert('Quote request submitted successfully!');">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="service">Service Type</label>
+              <select id="service" name="service" required>
+                <option>Spare Parts</option>
+                <option>Electronic Servicing</option>
+                <option>HMI Conversion</option>
+                <option>Automation Support</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Describe your requirements"></textarea>
+            </div>
+            <button type="submit" class="form-submit">Submit Request</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team-section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Meet Our Expert Team</h2>
+          <p>Experienced engineers dedicated to your success</p>
+        </div>
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-image">👨‍🔧</div>
+            <div class="team-info">
+              <h4>Senior Engineer</h4>
+              <p>Compact Spinning Systems</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-image">👩‍💼</div>
+            <div class="team-info">
+              <h4>Electronics Specialist</h4>
+              <p>Drive & PCB Repairs</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-image">👨‍💻</div>
+            <div class="team-info">
+              <h4>Automation Expert</h4>
+              <p>HMI & Control Systems</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <div class="team-image">👩‍🔬</div>
+            <div class="team-info">
+              <h4>Technical Support Lead</h4>
+              <p>24/7 Customer Service</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+      <div class="container">
+        <div class="faq-grid">
+          <div class="faq-list">
+            <h2 style="color: var(--primary); margin-bottom: 24px;">Frequently Asked Questions</h2>
+            <div class="faq-item active">
+              <h4>What types of machinery do you service?</h4>
+              <p>We specialize in compact spinning systems, modern textile machinery, and industrial automation equipment from leading manufacturers including Rieter, Trützschler, Lakshmi, Savio, and others.</p>
+            </div>
+            <div class="faq-item">
+              <h4>What's your typical turnaround time?</h4>
+              <p>Most repairs are completed within 24-48 hours. For complex jobs, we provide daily updates and work to minimize your downtime wherever possible.</p>
+            </div>
+            <div class="faq-item">
+              <h4>Do you offer preventive maintenance?</h4>
+              <p>Yes, we offer comprehensive preventive maintenance plans customized to your machinery and production schedule to minimize unexpected breakdowns.</p>
+            </div>
+            <div class="faq-item">
+              <h4>Are spare parts always in stock?</h4>
+              <p>We maintain inventory of commonly needed parts and can source specialized components quickly through our supplier network across India.</p>
+            </div>
+            <div class="faq-item">
+              <h4>Do you provide warranty on repairs?</h4>
+              <p>All repairs come with a 6-month warranty on parts and labor. Extended warranties and maintenance contracts are also available.</p>
+            </div>
+          </div>
+          <div class="faq-image"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+      <div class="newsletter-content">
+        <h3>Subscribe to Our Updates</h3>
+        <p>Get the latest industry insights, maintenance tips, and service announcements delivered to your inbox.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed to newsletter!');">
+          <input type="email" placeholder="Enter your email address" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h4>About Sri Sastha</h4>
+          <p>Located in Coimbatore, Tamil Nadu, we've been delivering precision engineering solutions to textile manufacturers for decades. We're committed to quality, reliability, and customer success.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#services">Spare Parts</a></li>
+            <li><a href="#services">Electronic Servicing</a></li>
+            <li><a href="#services">HMI Conversions</a></li>
+            <li><a href="#services">Automation Solutions</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#expertise">Our Expertise</a></li>
+            <li><a href="#team">Meet Our Team</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact Us</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <p>📍 Coimbatore, Tamil Nadu, India</p>
+          <p>📞 +91 87540 22322</p>
+          <p>📧 srisasthatexengg@gmail.com</p>
+          <p>🕒 24/7 Technical Support Available</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Sri Sastha Textile Engineering. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // FAQ Toggle Script
+    document.querySelectorAll('.faq-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
