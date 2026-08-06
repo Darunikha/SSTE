@@ -1,0 +1,18 @@
+# Environment Variables (NEVER push these - contains passwords/secrets!)
+backend/.env
+.env
+.env.local
+.env.production
+
+# Dependencies
+node_modules/
+backend/node_modules/
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log

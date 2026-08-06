@@ -1,4 +1,5 @@
 const Quote = require('../models/Quote');
+const sendEmail = require('../utils/sendEmail');
 
 // In-memory array fallback if MongoDB is not active
 let mockQuotes = [
@@ -38,6 +39,45 @@ const createQuote = async (req, res) => {
         createdAt: new Date().toISOString(),
       };
       mockQuotes.unshift(quote);
+    }
+
+    // Attempt to send email notification asynchronously
+    try {
+      await sendEmail({
+        subject: `🚨 New Quote Request from ${name} - Sri Sastha Textile Engineering`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6;">
+            <h2 style="color: #0284c7; border-bottom: 2px solid #0284c7; padding-bottom: 10px;">New Service Request Received</h2>
+            <p>You have received a new inquiry/quote request from your website:</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+              <tr>
+                <td style="padding: 8px; font-weight: bold; width: 120px;">Client Name:</td>
+                <td style="padding: 8px;">${name}</td>
+              </tr>
+              <tr style="background-color: #f9fafb;">
+                <td style="padding: 8px; font-weight: bold;">Client Email:</td>
+                <td style="padding: 8px;"><a href="mailto:${email}">${email}</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold;">Service Requested:</td>
+                <td style="padding: 8px;">${service}</td>
+              </tr>
+              <tr style="background-color: #f9fafb;">
+                <td style="padding: 8px; font-weight: bold;">Message:</td>
+                <td style="padding: 8px;">${message || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px; font-weight: bold;">Date/Time:</td>
+                <td style="padding: 8px;">${new Date().toLocaleString()}</td>
+              </tr>
+            </table>
+            <br/>
+            <p style="font-size: 12px; color: #6b7280;">This is an automated notification from Sri Sastha Textile Engineering Web Portal.</p>
+          </div>
+        `,
+      });
+    } catch (emailErr) {
+      console.error('Failed to send notification email:', emailErr.message);
     }
 
     res.status(201).json({

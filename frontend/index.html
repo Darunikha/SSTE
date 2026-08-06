@@ -700,7 +700,7 @@
       <div class="container">
         <div class="form-section" style="max-width: 600px; margin: 0 auto; background: #f5f3ff; padding: 0;">
           <h3 style="text-align: center; margin-bottom: 30px;">Request A Quote</h3>
-          <form onsubmit="event.preventDefault(); alert('Quote request submitted successfully!');">
+          <form id="quoteForm" onsubmit="handleQuoteSubmit(event)">
             <div class="form-group">
               <label for="name">Your Name</label>
               <input type="text" id="name" name="name" placeholder="Enter your name" required>
@@ -722,7 +722,8 @@
               <label for="message">Message</label>
               <textarea id="message" name="message" placeholder="Describe your requirements"></textarea>
             </div>
-            <button type="submit" class="form-submit">Submit Request</button>
+            <button type="submit" id="quoteSubmitBtn" class="form-submit">Submit Request</button>
+            <p id="quoteStatus" style="text-align:center; margin-top:12px; font-size:14px;"></p>
           </form>
         </div>
       </div>
@@ -851,7 +852,13 @@
     </footer>
   </div>
 
+  <!-- EmailJS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <script>
+    // Initialize EmailJS with your Public Key
+    emailjs.init('-LiMWAjZj_P-9FBNF');
+
     // FAQ Toggle Script
     document.querySelectorAll('.faq-item').forEach(item => {
       item.addEventListener('click', function() {
@@ -859,6 +866,47 @@
         this.classList.add('active');
       });
     });
+
+    // Quote Form Submit Handler
+    function handleQuoteSubmit(event) {
+      event.preventDefault();
+
+      const btn = document.getElementById('quoteSubmitBtn');
+      const status = document.getElementById('quoteStatus');
+
+      const templateParams = {
+        name:    document.getElementById('name').value,
+        email:   document.getElementById('email').value,
+        subject: 'Service Request: ' + document.getElementById('service').value,
+        message: document.getElementById('message').value,
+      };
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      status.style.color = '#6b7280';
+      status.textContent = 'Submitting your request...';
+
+      emailjs.send('service_portfolio', 'template_qj3wkuj', templateParams)
+        .then(function() {
+          btn.textContent = '✅ Request Sent!';
+          btn.style.background = '#16a34a';
+          status.style.color = '#16a34a';
+          status.textContent = 'Thank you! We will contact you within 24 hours.';
+          document.getElementById('quoteForm').reset();
+          setTimeout(() => {
+            btn.disabled = false;
+            btn.textContent = 'Submit Request';
+            btn.style.background = '';
+            status.textContent = '';
+          }, 5000);
+        }, function(error) {
+          btn.disabled = false;
+          btn.textContent = 'Submit Request';
+          status.style.color = '#dc2626';
+          status.textContent = 'Something went wrong. Please try again or call us directly.';
+          console.error('EmailJS error:', error);
+        });
+    }
   </script>
 </body>
 </html>
