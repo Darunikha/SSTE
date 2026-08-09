@@ -1,11 +1,10 @@
 import React from 'react';
 
-const StatItem = ({ icon = '✓', number, label }) => {
+const StatItem = ({ number, label }) => {
   return (
-    <div className="stat-item">
-      <div className="stat-icon">{icon}</div>
-      <div className="stat-number">{number}</div>
-      <div className="stat-label">{label}</div>
+    <div className="trust-item">
+      <span className="trust-number">{number}</span>
+      <span className="trust-label">{label}</span>
     </div>
   );
 };

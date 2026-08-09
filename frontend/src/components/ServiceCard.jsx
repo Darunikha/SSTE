@@ -1,12 +1,15 @@
 import React from 'react';
 
-const ServiceCard = ({ icon, title, description }) => {
+const ServiceCard = ({ index, title, description }) => {
   return (
-    <div className="service-card">
-      {icon && <div className="service-icon">{icon}</div>}
-      <h3>{title}</h3>
-      <p>{description}</p>
-    </div>
+    <>
+      <span className="service-index">{String(index + 1).padStart(2, '0')}</span>
+      <div className="service-copy">
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+      <span className="service-arrow" aria-hidden="true">&rarr;</span>
+    </>
   );
 };
 

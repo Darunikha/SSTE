@@ -1,10 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Hero from '../components/Hero';
+import TrustMetrics from '../components/TrustMetrics';
 import ServiceCard from '../components/ServiceCard';
-import StatItem from '../components/StatItem';
+import ExpertiseItem from '../components/ExpertiseItem';
+import ExpertiseVisual from '../components/ExpertiseVisual';
+import IndustriesBand from '../components/IndustriesBand';
+import WhyChooseUs from '../components/WhyChooseUs';
+import ProcessSection from '../components/ProcessSection';
+import ReviewsSection from '../components/ReviewsSection';
 import TeamCard from '../components/TeamCard';
 import FaqItem from '../components/FaqItem';
 import QuoteForm from '../components/QuoteForm';
+import SectionHeading from '../components/SectionHeading';
+import Reveal from '../components/Reveal';
 import { getServicesApi, getExpertiseApi, getStatsApi, getTeamApi, getFaqsApi } from '../services/api';
 
 const HomePage = () => {
@@ -14,6 +23,7 @@ const HomePage = () => {
   const [team, setTeam] = useState([]);
   const [faqs, setFaqs] = useState([]);
   const [activeFaq, setActiveFaq] = useState(0);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,6 +49,13 @@ const HomePage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (location.state?.scrollTo) {
+      const el = document.getElementById(location.state.scrollTo);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [location.state]);
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -48,92 +65,127 @@ const HomePage = () => {
 
   return (
     <>
-      {/* Hero Section */}
-      <Hero
-        onGetStartedClick={() => scrollToSection('contact')}
-        onLearnMoreClick={() => scrollToSection('services')}
-      />
+      <Hero onGetStartedClick={() => scrollToSection('contact')} onLearnMoreClick={() => scrollToSection('expertise')} />
 
-      {/* Services Section */}
-      <section id="services">
+      <TrustMetrics stats={stats} />
+
+      <section id="services" className="section">
         <div className="container">
-          <div className="section-title">
-            <h2>Our Core Services</h2>
-            <p>Complete textile machinery support solutions</p>
-          </div>
-          <div className="services-grid">
+          <Reveal>
+            <SectionHeading
+              eyebrow="01 / Services"
+              title="Engineering Support Built Around Your Production."
+              lead="From precision spare parts to industrial automation, we provide the technical support required to keep textile manufacturing operations moving."
+            />
+          </Reveal>
+          <ol className="service-list">
             {services.map((item, idx) => (
-              <ServiceCard key={item._id || idx} icon={item.icon} title={item.title} description={item.description} />
+              <Reveal
+                as="li"
+                key={item._id || idx}
+                className="service-row"
+                style={{ transitionDelay: `${Math.min(idx, 6) * 70}ms` }}
+              >
+                <ServiceCard index={idx} title={item.title} description={item.description} />
+              </Reveal>
             ))}
-          </div>
+          </ol>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="stats-section">
-        <div className="container">
-          <div className="stats-grid">
-            {stats.map((item, idx) => (
-              <StatItem key={item._id || idx} icon={item.icon} number={item.number} label={item.label} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Expertise Section */}
-      <section id="expertise">
-        <div className="container">
-          <div className="section-title">
-            <h2>Our Expertise</h2>
-            <p>Specialized knowledge across the textile machinery industry</p>
-          </div>
-          <div className="services-grid">
+      <section id="expertise" className="section section-alt">
+        <div className="container expertise-grid">
+          <Reveal>
+            <SectionHeading
+              eyebrow="02 / Expertise"
+              title="Specialized Knowledge. Built on the Factory Floor."
+            />
+            <ExpertiseVisual />
+          </Reveal>
+          <ul className="expertise-list">
             {expertise.map((item, idx) => (
-              <ServiceCard key={item._id || idx} title={item.title} description={item.description} />
+              <Reveal
+                as="li"
+                key={item._id || idx}
+                className="expertise-row"
+                style={{ transitionDelay: `${Math.min(idx, 6) * 70}ms` }}
+              >
+                <ExpertiseItem index={idx} title={item.title} description={item.description} />
+              </Reveal>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
-      {/* Request A Quote Section */}
-      <section id="contact" style={{ padding: '60px 24px', background: '#f5f3ff' }}>
-        <div className="container">
-          <QuoteForm />
-        </div>
-      </section>
+      <IndustriesBand />
 
-      {/* Team Section */}
-      <section id="team" className="team-section">
+      <section id="about" className="section">
         <div className="container">
-          <div className="section-title">
-            <h2>Meet Our Expert Team</h2>
-            <p>Experienced engineers dedicated to your success</p>
+          <div className="about-block">
+            <SectionHeading
+              eyebrow="04 / About"
+              title="Engineering Partners Since Day One."
+              lead="Sri Sastha Textile Engineering is based in Coimbatore, Tamil Nadu, supporting textile manufacturers with spare parts, electronics servicing, and automation expertise built directly on the factory floor."
+            />
           </div>
-          <div className="team-grid">
-            {team.map((item, idx) => (
-              <TeamCard key={item._id || idx} icon={item.icon} role={item.role} specialty={item.specialty} />
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="faq-section">
-        <div className="container">
-          <div className="faq-grid">
-            <div className="faq-list">
-              <h2 style={{ color: 'var(--primary)', marginBottom: '24px' }}>Frequently Asked Questions</h2>
-              {faqs.map((faq, idx) => (
-                <FaqItem
-                  key={faq._id || idx}
-                  question={faq.question}
-                  answer={faq.answer}
-                  isActive={activeFaq === idx}
-                  onClick={() => setActiveFaq(idx)}
-                />
+          <div className="about-block">
+            <WhyChooseUs />
+          </div>
+
+          <div className="about-block">
+            <ProcessSection />
+          </div>
+
+          <div className="about-block">
+            <SectionHeading eyebrow="Team" title="Engineers Behind the Response." level={3} />
+            <Reveal as="div" className="team-grid">
+              {team.map((item, idx) => (
+                <TeamCard key={item._id || idx} role={item.role} specialty={item.specialty} />
               ))}
-            </div>
-            <div className="faq-image"></div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      <ReviewsSection />
+
+      <section id="contact" className="section quote-section">
+        <div className="container quote-grid">
+          <Reveal>
+            <SectionHeading
+              eyebrow="Get in Touch"
+              title="Need Technical Support?"
+              lead="Tell us what your machinery needs. Our team will review your requirement and get back to you."
+            />
+            <ul className="quote-contact-list">
+              <li>Coimbatore, Tamil Nadu, India</li>
+              <li><a href="tel:+918754022322">+91 87540 22322</a></li>
+              <li><a href="mailto:srisasthatexengg@gmail.com">srisasthatexengg@gmail.com</a></li>
+            </ul>
+          </Reveal>
+          <Reveal>
+            <QuoteForm />
+          </Reveal>
+        </div>
+      </section>
+
+      <section id="faq" className="section section-alt">
+        <div className="container faq-grid">
+          <Reveal>
+            <SectionHeading eyebrow="FAQ" title="Frequently Asked Questions" />
+          </Reveal>
+          <div className="faq-list">
+            {faqs.map((faq, idx) => (
+              <FaqItem
+                key={faq._id || idx}
+                id={faq._id || idx}
+                question={faq.question}
+                answer={faq.answer}
+                isActive={activeFaq === idx}
+                onToggle={() => setActiveFaq(activeFaq === idx ? -1 : idx)}
+              />
+            ))}
           </div>
         </div>
       </section>

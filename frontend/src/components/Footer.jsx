@@ -1,47 +1,63 @@
 import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Footer = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const goToSection = (sectionId) => {
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: sectionId } });
+      return;
+    }
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <footer>
-      <div className="footer-grid">
-        <div className="footer-section">
-          <h4>About Sri Sastha</h4>
-          <p>
-            Located in Coimbatore, Tamil Nadu, we've been delivering precision engineering solutions to textile manufacturers for decades. We're committed to quality, reliability, and customer success.
-          </p>
+    <footer className="site-footer">
+      <div className="container footer-top">
+        <div className="footer-brand">
+          <span className="brand-name">Sri Sastha Textile Engineering</span>
+          <p>Coimbatore, Tamil Nadu, India</p>
+          <p><a href="tel:+918754022322">+91 87540 22322</a></p>
+          <p><a href="mailto:srisasthatexengg@gmail.com">srisasthatexengg@gmail.com</a></p>
+          <span className="footer-support-tag">24/7 Technical Support</span>
         </div>
-        <div className="footer-section">
+
+        <div className="footer-col">
           <h4>Services</h4>
           <ul>
-            <li><a href="#services">Spare Parts</a></li>
-            <li><a href="#services">Electronic Servicing</a></li>
-            <li><a href="#services">HMI Conversions</a></li>
-            <li><a href="#services">Automation Solutions</a></li>
+            <li><button onClick={() => goToSection('services')}>Spare Parts</button></li>
+            <li><button onClick={() => goToSection('services')}>Electronic Servicing</button></li>
+            <li><button onClick={() => goToSection('services')}>HMI Conversions</button></li>
+            <li><button onClick={() => goToSection('services')}>Automation Solutions</button></li>
           </ul>
         </div>
-        <div className="footer-section">
-          <h4>Quick Links</h4>
+
+        <div className="footer-col">
+          <h4>Company</h4>
           <ul>
-            <li><a href="#expertise">Our Expertise</a></li>
-            <li><a href="#team">Meet Our Team</a></li>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="#contact">Contact Us</a></li>
+            <li><button onClick={() => goToSection('expertise')}>Our Expertise</button></li>
+            <li><button onClick={() => goToSection('industries')}>Industries</button></li>
+            <li><button onClick={() => goToSection('about')}>Meet Our Team</button></li>
+            <li><button onClick={() => goToSection('faq')}>FAQ</button></li>
+            <li><button onClick={() => goToSection('contact')}>Contact</button></li>
           </ul>
         </div>
-        <div className="footer-section">
-          <h4>Contact Info</h4>
-          <p>📍 Coimbatore, Tamil Nadu, India</p>
-          <p>📞 +91 87540 22322</p>
-          <p>📧 srisasthatexengg@gmail.com</p>
-          <p>🕒 24/7 Technical Support Available</p>
+
+        <div className="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
         </div>
       </div>
-      <div className="footer-bottom">
-        <p>
-          &copy; 2026 Sri Sastha Textile Engineering. All rights reserved. |{' '}
-          <a href="#" style={{ color: 'inherit' }}>Privacy Policy</a> |{' '}
-          <a href="#" style={{ color: 'inherit' }}>Terms of Service</a>
-        </p>
+      <div className="container footer-bottom">
+        <p>&copy; 2026 Sri Sastha Textile Engineering. All rights reserved.</p>
       </div>
     </footer>
   );

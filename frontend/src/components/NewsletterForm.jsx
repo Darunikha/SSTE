@@ -9,7 +9,7 @@ const NewsletterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || loading) return;
 
     setLoading(true);
     try {
@@ -27,19 +27,25 @@ const NewsletterForm = () => {
   };
 
   return (
-    <section className="newsletter-section">
-      <div className="newsletter-content">
-        <h3>Subscribe to Our Updates</h3>
-        <p>Get the latest industry insights, maintenance tips, and service announcements delivered to your inbox.</p>
+    <section className="newsletter-band">
+      <div className="container newsletter-inner">
+        <div>
+          <h3>Stay Connected With Sri Sastha</h3>
+          <p>Receive occasional updates on textile machinery support, maintenance and engineering solutions.</p>
+        </div>
         <form className="newsletter-form" onSubmit={handleSubmit}>
+          <label htmlFor="newsletter-email" className="visually-hidden">
+            Email address
+          </label>
           <input
             type="email"
+            id="newsletter-email"
             placeholder="Enter your email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button type="submit" disabled={loading}>
+          <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? 'Submitting...' : 'Subscribe'}
           </button>
         </form>

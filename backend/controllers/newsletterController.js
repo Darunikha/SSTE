@@ -50,26 +50,4 @@ const subscribeNewsletter = async (req, res) => {
   }
 };
 
-// @desc    Get all newsletter subscribers
-// @route   GET /api/newsletter
-// @access  Private (Admin)
-const getSubscribers = async (req, res) => {
-  try {
-    let subscribers;
-    try {
-      subscribers = await Newsletter.find().sort({ createdAt: -1 });
-    } catch (dbErr) {
-      subscribers = mockSubscribers;
-    }
-
-    res.json({
-      success: true,
-      count: subscribers.length,
-      data: subscribers,
-    });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-module.exports = { subscribeNewsletter, getSubscribers };
+module.exports = { subscribeNewsletter };

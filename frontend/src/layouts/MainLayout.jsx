@@ -6,8 +6,13 @@ import NewsletterForm from '../components/NewsletterForm';
 const MainLayout = ({ children, showNewsletter = true }) => {
   return (
     <>
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
       <Navbar />
-      <main style={{ flex: 1 }}>{children}</main>
+      <main id="main-content" style={{ flex: 1 }}>
+        {children}
+      </main>
       {showNewsletter && <NewsletterForm />}
       <Footer />
     </>
