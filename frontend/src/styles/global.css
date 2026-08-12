@@ -1500,3 +1500,114 @@ button {
     min-width: 0;
   }
 }
+
+/* ==========================================================================
+   Dark Mode & Theme Switching
+   ========================================================================== */
+
+html[data-theme="dark"] {
+  /* Brand palette overrides */
+  --color-primary-dark: #b89adc;
+  --color-primary: #9a6bcc;
+  --color-secondary: #5d2e8c;
+  --color-background: #0d0614;
+  --color-accent: #b89adc;
+  --color-accent-hover: #faf5ff;
+  --color-neutral: #7b4db5;
+  --color-ink: #f5effa;
+  --color-white: #170d22;
+  --color-soft-gray: #20132e;
+
+  /* Semantic tokens */
+  --surface: var(--color-white);
+  --surface-muted: var(--color-soft-gray);
+  --surface-sunken: var(--color-background);
+  --surface-inverse: #faf5ff;
+
+  --text-primary: var(--color-ink);
+  --text-secondary: #dcd0eb;
+  --text-muted: #a693bf;
+  --text-inverse: #1b1226;
+  --text-inverse-muted: rgba(27, 18, 38, 0.72);
+
+  --border-color: rgba(245, 239, 250, 0.12);
+  --border-color-strong: rgba(245, 239, 250, 0.22);
+  --border-inverse: rgba(27, 18, 38, 0.18);
+
+  --primary: var(--color-primary-dark);
+  --primary-hover: #faf5ff;
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 12px 28px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 28px 56px rgba(0, 0, 0, 0.5);
+}
+
+/* Global Transitions for Theme Toggle */
+body,
+.section,
+.section-alt,
+.site-header,
+.service-row,
+.expertise-row,
+h1, h2, h3, h4,
+p,
+a:not(.btn),
+.brand,
+.brand-name,
+.brand-name small,
+.nav-link,
+input, select, textarea,
+.trust-strip,
+.footer,
+.faq-item {
+  transition: background-color 0.4s var(--ease), border-color 0.4s var(--ease), color 0.4s var(--ease), fill 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+/* Theme Toggle Button Style */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color-strong);
+  background: var(--surface-muted);
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.3s var(--ease), border-color 0.3s var(--ease), transform 0.3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--border-color-strong);
+  border-color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  transition: transform 0.5s var(--ease), opacity 0.3s var(--ease);
+}
+
+/* Specific component tweaks for dark theme */
+html[data-theme="dark"] .hero-texture {
+  opacity: 0.15;
+  background-image:
+    linear-gradient(rgba(245, 239, 250, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 239, 250, 0.15) 1px, transparent 1px);
+}
+
+html[data-theme="dark"] .brand-mark {
+  filter: drop-shadow(0 0 4px rgba(184, 154, 220, 0.4));
+}

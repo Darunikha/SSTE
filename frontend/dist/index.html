@@ -4,6 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#602930" />
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = savedTheme || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        console.error('Failed to set initial theme:', e);
+      }
+    })();
+  </script>
   <title>Sri Sastha Textile Engineering | Textile Machinery Spares &amp; Servicing, Coimbatore</title>
   <meta name="description" content="Sri Sastha Textile Engineering supplies textile machinery spare parts, electronic servicing, HMI conversions and industrial automation support for textile manufacturers in Coimbatore, Tamil Nadu." />
   <meta name="robots" content="index, follow" />
@@ -15,7 +27,7 @@
   <meta property="og:locale" content="en_IN" />
   <meta name="twitter:card" content="summary" />
 
-  <link rel="icon" href="/assets/logo-pFez-GyW.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/logo-b81Jmx83.svg" type="image/svg+xml" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,10 +49,10 @@
       "email": "srisasthatexengg@gmail.com"
     }
   </script>
-  <script type="module" crossorigin src="/assets/index-GbjSo66S.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-qizBJCMt.css">
+  <script type="module" crossorigin src="/assets/index-D5-uTlj1.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-DN0HJVz8.css">
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root"></div>
 </body>
 </html>
