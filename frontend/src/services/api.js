@@ -19,5 +19,6 @@ export const getExpertiseApi = () => API.get('/expertise');
 export const getStatsApi = () => API.get('/stats');
 export const getTeamApi = () => API.get('/team');
 export const getFaqsApi = () => API.get('/faqs');
+export const getCatalogApi = () => API.get('/catalog');
 
 export default API;

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { submitQuoteApi } from '../services/api';
 import { useToast } from '../context/ToastContext';
 
@@ -14,6 +15,18 @@ const QuoteForm = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
   const { addToast } = useToast();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.prefillProduct) {
+      const { name, sku } = location.state.prefillProduct;
+      setFormData((prev) => ({
+        ...prev,
+        message: `I would like to request a quote/information for:\n- Item: ${name}\n- SKU: ${sku}\n\nPlease provide details on price, lead time, and shipping.`,
+        service: 'Spare Parts',
+      }));
+    }
+  }, [location.state]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

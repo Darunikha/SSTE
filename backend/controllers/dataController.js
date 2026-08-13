@@ -2,7 +2,8 @@ const Service = require('../models/Service');
 const Stat = require('../models/Stat');
 const TeamMember = require('../models/TeamMember');
 const FAQ = require('../models/FAQ');
-const { initialServices, initialExpertise, initialStats, initialTeam, initialFaqs } = require('../utils/seedData');
+const CatalogItem = require('../models/CatalogItem');
+const { initialServices, initialExpertise, initialStats, initialTeam, initialFaqs, initialCatalogItems } = require('../utils/seedData');
 
 // @desc    Get all core services
 // @route   GET /api/services
@@ -99,4 +100,23 @@ const getFaqs = async (req, res) => {
   }
 };
 
-module.exports = { getServices, getExpertise, getStats, getTeam, getFaqs };
+// @desc    Get all catalog items
+// @route   GET /api/catalog
+// @access  Public
+const getCatalog = async (req, res) => {
+  try {
+    let catalog;
+    try {
+      catalog = await CatalogItem.find();
+      if (!catalog || catalog.length === 0) catalog = initialCatalogItems;
+    } catch (dbErr) {
+      catalog = initialCatalogItems;
+    }
+
+    res.json({ success: true, data: catalog });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = { getServices, getExpertise, getStats, getTeam, getFaqs, getCatalog };

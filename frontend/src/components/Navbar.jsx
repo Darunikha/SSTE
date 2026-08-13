@@ -4,6 +4,7 @@ import logoSvg from '../assets/images/logo.svg';
 
 const NAV_ITEMS = [
   { id: 'services', label: 'Services' },
+  { id: 'catalog', label: 'Catalog', isPage: true, path: '/catalog' },
   { id: 'expertise', label: 'Expertise' },
   { id: 'industries', label: 'Industries' },
   { id: 'about', label: 'About' },
@@ -33,6 +34,22 @@ const Navbar = () => {
       document.body.style.overflow = '';
     };
   }, [menuOpen]);
+
+  const handleNavClick = (item) => {
+    setMenuOpen(false);
+    if (item.isPage) {
+      navigate(item.path);
+      return;
+    }
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: item.id } });
+      return;
+    }
+    const element = document.getElementById(item.id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   const goToSection = (sectionId) => {
     setMenuOpen(false);
@@ -87,7 +104,14 @@ const Navbar = () => {
           <ul>
             {NAV_ITEMS.map((item) => (
               <li key={item.id}>
-                <button className="nav-link" onClick={() => goToSection(item.id)}>
+                <button
+                  className={`nav-link ${
+                    item.isPage
+                      ? location.pathname === item.path ? 'is-active' : ''
+                      : ''
+                  }`}
+                  onClick={() => handleNavClick(item)}
+                >
                   {item.label}
                 </button>
               </li>
@@ -122,7 +146,16 @@ const Navbar = () => {
         <ul>
           {NAV_ITEMS.map((item) => (
             <li key={item.id}>
-              <button onClick={() => goToSection(item.id)}>{item.label}</button>
+              <button
+                className={
+                  item.isPage
+                    ? location.pathname === item.path ? 'is-active' : ''
+                    : ''
+                }
+                onClick={() => handleNavClick(item)}
+              >
+                {item.label}
+              </button>
             </li>
           ))}
         </ul>

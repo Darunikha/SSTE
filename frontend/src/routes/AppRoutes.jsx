@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import HomePage from '../pages/HomePage';
+import CatalogPage from '../pages/CatalogPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 const AppRoutes = () => {
@@ -12,6 +13,14 @@ const AppRoutes = () => {
         element={
           <MainLayout>
             <HomePage />
+          </MainLayout>
+        }
+      />
+      <Route
+        path="/catalog"
+        element={
+          <MainLayout>
+            <CatalogPage />
           </MainLayout>
         }
       />
