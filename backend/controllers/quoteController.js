@@ -41,9 +41,10 @@ const createQuote = async (req, res) => {
       mockQuotes.unshift(quote);
     }
 
-    // Attempt to send email notification asynchronously
+    // 1. Send Admin Notification Email
     try {
       await sendEmail({
+        to: process.env.NOTIFICATION_EMAIL || 'sales@sasthatextile.com',
         subject: `🚨 New Quote Request from ${name} - Sri Sastha Textile Engineering`,
         html: `
           <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6;">
@@ -77,7 +78,35 @@ const createQuote = async (req, res) => {
         `,
       });
     } catch (emailErr) {
-      console.error('Failed to send notification email:', emailErr.message);
+      console.error('Failed to send admin notification email:', emailErr.message);
+    }
+
+    // 2. Send Client Confirmation Email (Receipt to user who submitted)
+    if (email) {
+      try {
+        await sendEmail({
+          to: email,
+          subject: `Thank you for contacting Sri Sastha Textile Engineering`,
+          html: `
+            <div style="font-family: Arial, sans-serif; padding: 20px; color: #333; line-height: 1.6;">
+              <h2 style="color: #0284c7; border-bottom: 2px solid #0284c7; padding-bottom: 10px;">Quote Request Confirmation</h2>
+              <p>Dear ${name},</p>
+              <p>Thank you for reaching out to <strong>Sri Sastha Textile Engineering</strong>. We have received your request regarding <strong>${service}</strong>.</p>
+              <p>Our engineering team will review your requirements and get back to you within 24 hours.</p>
+              <br/>
+              <div style="background-color: #f3f4f6; padding: 15px; border-radius: 8px;">
+                <h4 style="margin-top: 0; color: #374151;">Summary of your submission:</h4>
+                <p style="margin: 4px 0;"><strong>Service:</strong> ${service}</p>
+                <p style="margin: 4px 0;"><strong>Message:</strong> ${message || 'N/A'}</p>
+              </div>
+              <br/>
+              <p>Best regards,<br/><strong>Sri Sastha Textile Engineering Team</strong><br/><a href="mailto:sales@sasthatextile.com">sales@sasthatextile.com</a></p>
+            </div>
+          `,
+        });
+      } catch (emailErr) {
+        console.error('Failed to send client confirmation email:', emailErr.message);
+      }
     }
 
     res.status(201).json({

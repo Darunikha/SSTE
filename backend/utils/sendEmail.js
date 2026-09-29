@@ -39,7 +39,7 @@ const sendEmail = async (options) => {
   };
 
   const info = await transporter.sendMail(mailOptions);
-  console.log('✉️ Email notification sent successfully: %s', info.messageId);
+  console.log(`✉️ Email notification sent successfully to ${mailOptions.to}: ${info.messageId}`);
   return { success: true, messageId: info.messageId };
 };
 
