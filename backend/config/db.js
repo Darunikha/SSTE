@@ -7,6 +7,8 @@ const connectDB = async () => {
     });
     console.log(`[MongoDB] Database connected successfully: ${conn.connection.host}`);
   } catch (error) {
+    // No database: fail queries immediately so controllers fall back to built-in data without a 10s wait
+    mongoose.set('bufferCommands', false);
     console.warn(`[MongoDB] Notice: Could not connect to local MongoDB database (${error.message}). Running in mock/memory database mode for seamless testing.`);
   }
 };

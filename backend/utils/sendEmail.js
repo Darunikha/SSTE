@@ -9,6 +9,32 @@ const nodemailer = require('nodemailer');
  * @param {string} [options.text] - Plain text content fallback
  */
 const sendEmail = async (options) => {
+  // Preferred: Brevo HTTPS API (Render's free tier blocks outbound SMTP ports)
+  if (process.env.BREVO_API_KEY) {
+    const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_USER || 'srisastha.textile@gmail.com';
+    const to = options.to || process.env.NOTIFICATION_EMAIL || senderEmail;
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        sender: { name: 'Sri Sastha Textile Engineering', email: senderEmail },
+        to: [{ email: to }],
+        replyTo: { email: process.env.NOTIFICATION_EMAIL || senderEmail },
+        subject: options.subject,
+        htmlContent: options.html,
+        textContent: options.text,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(`Brevo API error ${res.status}: ${data.message || 'unknown error'}`);
+    console.log('Sent to:', to);
+    return { success: true, messageId: data.messageId };
+  }
+
   const host = process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = parseInt(process.env.SMTP_PORT || '587', 10);
   const user = process.env.SMTP_USER;
