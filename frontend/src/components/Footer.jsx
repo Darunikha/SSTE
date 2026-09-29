@@ -23,7 +23,7 @@ const Footer = () => {
     <footer className="site-footer">
       <div className="container footer-top">
         <div className="footer-brand">
-          <img className="footer-logo" src={logoLight} alt="STE - Quality First" />
+          <img className="footer-logo" src={logoLight} alt="SSTE - Quality First" />
           <span className="brand-name">Sri Sastha Textile Engineering</span>
           <p>Coimbatore, Tamil Nadu, India</p>
           <p><a href="tel:+918754022322">+91 87540 22322</a></p>
@@ -84,7 +84,7 @@ const Footer = () => {
       </div>
 
       <div className="container">
-        <div className="footer-wordmark" aria-hidden="true">STE</div>
+        <div className="footer-wordmark" aria-hidden="true">SSTE</div>
       </div>
 
       <div className="container footer-bottom">

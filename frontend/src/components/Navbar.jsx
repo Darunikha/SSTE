@@ -59,7 +59,7 @@ const Navbar = () => {
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="container nav-shell">
         <Link to="/" className="brand" onClick={() => setMenuOpen(false)}>
-          <img className="brand-mark" src={logoSvg} alt="STE - Sri Sastha Textile Engineering" />
+          <img className="brand-mark" src={logoSvg} alt="SSTE - Sri Sastha Textile Engineering" />
         </Link>
 
         <nav className="primary-nav" aria-label="Primary">
