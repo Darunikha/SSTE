@@ -23,7 +23,7 @@ const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
     host,
     port,
-    secure: port === 465, // true for 465, false for other ports
+    secure: false, // STARTTLS on port 587
     auth: {
       user,
       pass,
@@ -31,7 +31,7 @@ const sendEmail = async (options) => {
   });
 
   const mailOptions = {
-    from: process.env.FROM_EMAIL || `"Sri Sastha Website" <${user}>`,
+    from: process.env.FROM_EMAIL || '"Sri Sastha Textile Engineering" <srisastha.textile@gmail.com>',
     to: options.to || process.env.NOTIFICATION_EMAIL || user,
     subject: options.subject,
     text: options.text,
@@ -40,6 +40,7 @@ const sendEmail = async (options) => {
 
   const info = await transporter.sendMail(mailOptions);
   console.log(`✉️ Email notification sent successfully to ${mailOptions.to}: ${info.messageId}`);
+  console.log('Sent to:', mailOptions.to);
   return { success: true, messageId: info.messageId };
 };
 
