@@ -16,6 +16,8 @@ import SectionHeading from '../components/SectionHeading';
 import Reveal from '../components/Reveal';
 import { getServicesApi, getExpertiseApi, getStatsApi, getTeamApi, getFaqsApi } from '../services/api';
 
+const TICKER = ['Compact Spinning Spares', 'PCB Repair', 'VFD Servicing', 'HMI Conversion', 'Sensors', 'PLC Automation', 'Preventive Maintenance', 'Control Panels'];
+
 const HomePage = () => {
   const [services, setServices] = useState([]);
   const [expertise, setExpertise] = useState([]);
@@ -69,6 +71,14 @@ const HomePage = () => {
 
       <TrustMetrics stats={stats} />
 
+      <div className="ticker" aria-hidden="true">
+        <div className="ticker-track">
+          {[...TICKER, ...TICKER].map((t, i) => (
+            <span key={i}>{t}</span>
+          ))}
+        </div>
+      </div>
+
       <section id="services" className="section">
         <div className="container">
           <Reveal>
@@ -93,7 +103,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section id="expertise" className="section section-alt">
+      <section id="expertise" className="section section-dark">
         <div className="container expertise-grid">
           <Reveal>
             <SectionHeading
@@ -139,7 +149,7 @@ const HomePage = () => {
 
           <div className="about-block">
             <SectionHeading eyebrow="Team" title="Engineers Behind the Response." level={3} />
-            <Reveal as="div" className="team-grid">
+            <Reveal as="div" className="team-grid stagger">
               {team.map((item, idx) => (
                 <TeamCard key={item._id || idx} role={item.role} specialty={item.specialty} />
               ))}
@@ -170,7 +180,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section id="faq" className="section section-alt">
+      <section id="faq" className="section">
         <div className="container faq-grid">
           <Reveal>
             <SectionHeading eyebrow="FAQ" title="Frequently Asked Questions" />
@@ -187,6 +197,22 @@ const HomePage = () => {
               />
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section cta-band">
+        <div className="container cta-inner">
+          <Reveal>
+            <span className="eyebrow">Keep the line running</span>
+            <h2>Less Downtime. More Output.</h2>
+            <p>Talk to our engineers about spares, servicing or automation for your textile machinery.</p>
+            <div className="hero-actions">
+              <button className="btn btn-primary" onClick={() => scrollToSection('contact')}>
+                Request a Quote <span className="btn-arrow">&rarr;</span>
+              </button>
+              <a className="btn btn-outline" href="tel:+918754022322">Call +91 87540 22322</a>
+            </div>
+          </Reveal>
         </div>
       </section>
     </>

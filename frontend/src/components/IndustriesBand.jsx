@@ -3,10 +3,11 @@ import SectionHeading from './SectionHeading';
 import Reveal from './Reveal';
 
 const SYSTEMS = ['Rieter', 'Trützschler', 'Lakshmi', 'Savio'];
+const LOOP = [...SYSTEMS, ...SYSTEMS, ...SYSTEMS, ...SYSTEMS];
 
 const IndustriesBand = () => {
   return (
-    <section id="industries" className="section section-alt">
+    <section id="industries" className="section">
       <div className="container">
         <Reveal>
           <SectionHeading
@@ -15,13 +16,17 @@ const IndustriesBand = () => {
             lead="Experience supporting systems from leading textile machinery manufacturers, including:"
           />
         </Reveal>
-        <Reveal as="ul" className="industries-grid">
-          {SYSTEMS.map((name) => (
-            <li key={name} className="industry-chip">
+      </div>
+      <div className="industries-marquee">
+        <ul className="industries-track">
+          {LOOP.map((name, i) => (
+            <li key={`${name}-${i}`} className="industry-chip" aria-hidden={i >= SYSTEMS.length}>
               {name}
             </li>
           ))}
-        </Reveal>
+        </ul>
+      </div>
+      <div className="container">
         <p className="industries-note">
           …and other textile machinery systems commonly used across compact spinning and processing lines.
         </p>

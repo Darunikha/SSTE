@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import HomePage from '../pages/HomePage';
 import CatalogPage from '../pages/CatalogPage';
+import LegalPage from '../pages/LegalPage';
 import NotFoundPage from '../pages/NotFoundPage';
 
 const AppRoutes = () => {
@@ -24,6 +25,17 @@ const AppRoutes = () => {
           </MainLayout>
         }
       />
+      {['privacy', 'terms', 'cookies', 'warranty'].map((type) => (
+        <Route
+          key={type}
+          path={`/${type}`}
+          element={
+            <MainLayout showNewsletter={false}>
+              <LegalPage type={type} />
+            </MainLayout>
+          }
+        />
+      ))}
       <Route
         path="*"
         element={

@@ -5,7 +5,7 @@ import Reveal from './Reveal';
 const REASONS = [
   {
     title: 'Deep Textile Machinery Experience',
-    description: 'Decades of combined hands-on experience across compact spinning and textile processing equipment.',
+    description: 'Years of hands-on experience across compact spinning and textile processing equipment.',
   },
   {
     title: 'Rapid Technical Response',
@@ -33,7 +33,7 @@ const WhyChooseUs = () => {
   return (
     <>
       <SectionHeading eyebrow="Why Sri Sastha" title="A Technical Partner You Can Rely On." level={3} />
-      <Reveal as="div" className="why-us-grid">
+      <Reveal as="div" className="why-us-grid stagger">
         {REASONS.map((reason, idx) => (
           <div key={reason.title} className="why-us-item">
             <span className="why-us-index">{String(idx + 1).padStart(2, '0')}</span>

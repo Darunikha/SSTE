@@ -25,14 +25,14 @@ const REVIEWS = [
 
 const ReviewsSection = () => {
   return (
-    <section id="reviews" className="section">
+    <section id="reviews" className="section section-dark">
       <div className="container">
         <SectionHeading
           eyebrow="05 / Reviews"
           title="What Textile Manufacturers Say About Us."
           lead="Sample feedback illustrating the kind of engagements we handle every week."
         />
-        <Reveal as="div" className="reviews-grid">
+        <Reveal as="div" className="reviews-grid stagger">
           {REVIEWS.map((review) => (
             <div key={review.name} className="review-card">
               <span className="review-mark" aria-hidden="true">&ldquo;</span>

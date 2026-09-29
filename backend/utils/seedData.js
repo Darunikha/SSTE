@@ -39,42 +39,42 @@ const initialServices = [
 
 const initialExpertise = [
   {
-    title: 'Compact Spinning Systems',
-    description: 'Deep expertise in compact spinning technology including sensors, gears, and pneumatic components for Rieter, Trützschler, Lakshmi, and other leading systems.',
+    title: 'Component-Level Fault Finding',
+    description: 'We trace failures down to the individual capacitor, driver or sensor, so boards are repaired rather than replaced whenever it makes sense.',
     category: 'expertise',
   },
   {
-    title: 'Drive & Inverter Support',
-    description: 'Specialized servicing for VFDs, Siemens drives, Mitsubishi inverters, Danfoss, and ABB systems with factory-certified expertise.',
+    title: 'Multi-Brand Machine Knowledge',
+    description: 'Hands-on familiarity with Rieter, Trützschler, Lakshmi and Savio systems, and how their electronics and mechanics behave in real running conditions.',
     category: 'expertise',
   },
   {
-    title: 'Industrial Electronics',
-    description: 'PCB diagnostics, repairs, and component replacement for textile machinery control systems and HMI displays.',
+    title: 'Bench Testing & Validation',
+    description: 'Repaired drives and boards are load-tested against machine parameters before dispatch, cutting repeat failures and return visits.',
     category: 'expertise',
   },
   {
-    title: 'Machine Integration',
-    description: 'Seamless integration of new components, display upgrades, and automation enhancements with minimal production disruption.',
+    title: 'Retrofit & Upgrade Engineering',
+    description: 'Planning and fitting newer components into older machines, with wiring, signal and mounting details worked out to avoid production disruption.',
     category: 'expertise',
   },
   {
-    title: 'Technical Consulting',
-    description: 'Expert guidance on equipment optimization, upgrade planning, and best practices for maximum machinery performance.',
+    title: 'Root-Cause Analysis',
+    description: 'We look beyond the immediate fault to why it happened, whether heat, dust, power quality or wear, and advise on preventing a repeat.',
     category: 'expertise',
   },
   {
-    title: 'Rapid Response Support',
-    description: 'Quick diagnostic and repair services to minimize downtime and keep your operations running smoothly every day.',
+    title: 'Shop-Floor Training',
+    description: 'Practical guidance for your maintenance crew on safe handling, quick checks and early warning signs, based on what we see in the field.',
     category: 'expertise',
   },
 ];
 
 const initialStats = [
-  { icon: '✓', number: '50+', label: 'Years Combined Experience' },
+  { icon: '✓', number: '10+', label: 'Years of Experience' },
   { icon: '✓', number: '1K+', label: 'Machines Serviced' },
   { icon: '✓', number: '2.5K+', label: 'Happy Customers' },
-  { icon: '✓', number: '99%', label: 'Customer Satisfaction' },
+  { icon: '✓', number: '98%', label: 'Customer Satisfaction' },
 ];
 
 const initialTeam = [

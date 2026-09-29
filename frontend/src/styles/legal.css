@@ -1,0 +1,27 @@
+/* Legal pages: table of contents + numbered sections */
+.legal-layout { display: grid; grid-template-columns: 260px 1fr; gap: clamp(2rem, 1rem + 4vw, 5rem); align-items: start; }
+.legal-toc { position: sticky; top: calc(var(--header-height) + 1.5rem); padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); }
+.legal-toc h4 { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-mute); margin-bottom: 0.9rem; }
+.legal-toc h4:not(:first-child) { margin-top: 1.6rem; }
+.legal-toc ol, .legal-toc ul { display: flex; flex-direction: column; gap: 0.5rem; }
+.legal-toc a { text-decoration: none; font-size: 0.92rem; color: var(--ink-soft); transition: color 0.2s, padding 0.25s var(--ease); display: inline-block; }
+.legal-toc a:hover { color: var(--purple-500); padding-left: 4px; }
+
+.legal-body { max-width: 760px; }
+.legal-block { padding-bottom: 2.4rem; margin-bottom: 2.4rem; border-bottom: 1px solid var(--line); scroll-margin-top: calc(var(--header-height) + 1.5rem); }
+.legal-block:last-of-type { border-bottom: 0; }
+.legal-block h2 { font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem); margin-bottom: 1rem; display: flex; gap: 0.9rem; align-items: baseline; }
+.legal-block h2 span { font-size: 0.85rem; font-weight: 700; color: var(--purple-500); }
+.legal-block p { color: var(--ink-soft); margin-bottom: 0.9rem; }
+.legal-block ul { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.4rem; }
+.legal-block li { position: relative; padding-left: 1.5rem; color: var(--ink-soft); }
+.legal-block li::before { content: ''; position: absolute; left: 0; top: 0.65em; width: 7px; height: 7px; border-radius: 50%; background: var(--purple-500); }
+.legal-note { margin-top: 1rem; padding: 1.2rem 1.4rem; border-radius: var(--radius-sm); background: #faf8ff; border: 1px solid var(--line); font-size: 0.9rem; color: var(--ink-soft); }
+.legal-note a { border-bottom: 1px solid var(--ink); text-decoration: none; color: var(--ink); }
+
+@media (max-width: 900px) {
+  .legal-layout { grid-template-columns: 1fr; }
+  .legal-toc { position: static; }
+}
+
+.footer-logo { width: auto; height: 84px; margin-bottom: 1.2rem; }
