@@ -26,10 +26,18 @@ app.use(
     },
   })
 );
+// CLIENT_URL may hold several comma-separated origins, e.g.
+// https://your-site.vercel.app,https://www.yourdomain.com
+const allowedOrigins = (process.env.CLIENT_URL || '')
+  .split(',')
+  .map((o) => o.trim().replace(/\/+$/, ''))
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || '*',
-    credentials: true,
+    origin: allowedOrigins.length
+      ? (origin, cb) => cb(null, !origin || allowedOrigins.includes(origin))
+      : '*',
   })
 );
 app.use(morgan('dev'));

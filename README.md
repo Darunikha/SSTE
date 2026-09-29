@@ -145,3 +145,14 @@ This demo account works even without MongoDB connected.
 ## License
 
 © 2026 Sri Sastha Textile Engineering. All rights reserved.
+
+## Deploying the frontend to Vercel
+
+The frontend (`frontend/`) deploys to Vercel as a static Vite site; the Express API is hosted separately (for example on Render using `render.yaml`).
+
+1. **Deploy the backend first** and note its URL, e.g. `https://sri-sastha-api.onrender.com`. Set its `CLIENT_URL` env var to your Vercel URL (comma-separate several origins, e.g. `https://your-site.vercel.app,https://www.yourdomain.com`).
+2. **Import the repo in Vercel** and set **Root Directory** to `frontend`. The included `frontend/vercel.json` sets the Vite build, SPA rewrites (so `/catalog`, `/privacy`, `/terms`, `/cookies` and `/warranty` work on refresh), cache and security headers.
+3. **Add an environment variable** in Vercel: `VITE_API_URL` = your backend URL (with or without a trailing `/api`). Redeploy after changing it, because Vite bakes it in at build time.
+4. Open the site and check that services, stats, the catalog and the quote form load.
+
+Local development is unchanged: leave `VITE_API_URL` empty and Vite proxies `/api` to `http://localhost:5001`. See `frontend/.env.example`.
