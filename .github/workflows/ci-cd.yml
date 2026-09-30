@@ -1,0 +1,147 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel superseded runs on the same branch/PR
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 20
+
+jobs:
+  # ---------------------------------------------------------------- CI
+  frontend:
+    name: Frontend - build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - name: Upload build for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+          retention-days: 7
+
+  backend:
+    name: Backend - syntax check and API tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - name: Syntax check
+        run: find . -name node_modules -prune -o -name '*.js' -print0 | xargs -0 -n1 node --check
+      - run: npm test
+
+  # ---------------------------------------------------------------- CD
+  # Deploy jobs only run on pushes to main, after both CI jobs pass, and skip
+  # themselves cleanly if their secrets are not configured.
+  deploy-backend:
+    name: Deploy backend (Render)
+    needs: [frontend, backend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Trigger Render deploy
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL not set - skipping (Render's own auto-deploy is in charge)."
+            exit 0
+          fi
+          curl --fail --silent --show-error -X POST "$RENDER_DEPLOY_HOOK_URL"
+          echo "Render deploy triggered."
+      - name: Wait for backend to be healthy
+        env:
+          BACKEND_URL: ${{ vars.BACKEND_URL }}
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ] || [ -z "$BACKEND_URL" ]; then
+            echo "Nothing to verify - skipping."
+            exit 0
+          fi
+          # Give Render a moment to start the new build, then poll (free tier can be slow)
+          sleep 60
+          for i in $(seq 1 30); do
+            if curl --fail --silent --max-time 30 "$BACKEND_URL/api/health" | grep -q '"success":true'; then
+              echo "Backend healthy."
+              exit 0
+            fi
+            echo "Attempt $i: not healthy yet, retrying in 20s..."
+            sleep 20
+          done
+          echo "::error::Backend did not become healthy after deploy."
+          exit 1
+
+  deploy-frontend:
+    name: Deploy frontend (Vercel)
+    needs: [frontend, backend]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Check Vercel credentials
+        id: vercel
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "Vercel secrets not set - skipping (Vercel's Git integration is in charge)."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Deploy to Vercel (production)
+        if: steps.vercel.outputs.enabled == 'true'
+        run: |
+          npm install --global vercel@latest
+          vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+          vercel build --prod --token="$VERCEL_TOKEN"
+          vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN" | tee deploy.log
+      - name: Verify the live site proxies to the API
+        if: steps.vercel.outputs.enabled == 'true' && vars.SITE_URL != ''
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: |
+          sleep 10
+          curl --fail --silent --max-time 60 "$SITE_URL/api/health" | grep -q '"success":true'
+          echo "Frontend is live and reaching the backend."
