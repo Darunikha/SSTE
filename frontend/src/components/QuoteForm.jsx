@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { submitQuoteApi } from '../services/api';
 import { useToast } from '../context/ToastContext';
@@ -14,6 +14,8 @@ const QuoteForm = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null);
+  const [sent, setSent] = useState(null);
+  const panelRef = useRef(null);
   const { addToast } = useToast();
   const location = useLocation();
 
@@ -27,6 +29,13 @@ const QuoteForm = () => {
       }));
     }
   }, [location.state]);
+
+  useEffect(() => {
+    if (sent && panelRef.current) {
+      panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      panelRef.current.focus({ preventScroll: true });
+    }
+  }, [sent]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,8 +69,8 @@ const QuoteForm = () => {
     try {
       const res = await submitQuoteApi(formData);
       if (res.data.success) {
-        setStatus({ type: 'success', message: res.data.message || 'Quote request submitted successfully.' });
         addToast('Quote request submitted successfully! We will get back to you soon.', 'success');
+        setSent({ name: formData.name.trim(), email: formData.email.trim(), service: formData.service });
         setFormData(initialForm);
       }
     } catch (error) {
@@ -72,6 +81,29 @@ const QuoteForm = () => {
       setLoading(false);
     }
   };
+
+  if (sent) {
+    return (
+      <div className="quote-form-panel">
+        <div className="quote-success" ref={panelRef} tabIndex={-1} role="status" aria-live="polite">
+          <div className="quote-success-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12.5l4.5 4.5L19 7.5" />
+            </svg>
+          </div>
+          <h3>Thank you, {sent.name}!</h3>
+          <p>
+            We have received your request for <strong>{sent.service}</strong>. Our team will reply within 24 hours at{' '}
+            <strong>{sent.email}</strong>.
+          </p>
+          <p className="quote-success-note">A confirmation email is on its way. If you don&apos;t see it, check your spam folder.</p>
+          <button type="button" className="btn btn-primary" onClick={() => setSent(null)}>
+            Send another request
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="quote-form-panel">
@@ -141,7 +173,7 @@ const QuoteForm = () => {
         </button>
 
         {status && (
-          <p className={`form-status ${status.type}`} role="status">
+          <p className={`form-status ${status.type}`} role="alert">
             {status.message}
           </p>
         )}

@@ -18,11 +18,18 @@ const CatalogPage = () => {
   const [items, setItems] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [slowLoad, setSlowLoad] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All Items');
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
   const { addToast } = useToast();
+
+  useEffect(() => {
+    if (!loading) return undefined;
+    const timer = setTimeout(() => setSlowLoad(true), 4000);
+    return () => clearTimeout(timer);
+  }, [loading]);
 
   useEffect(() => {
     const fetchCatalog = async () => {
@@ -152,9 +159,25 @@ const CatalogPage = () => {
 
           {/* Catalog Listing */}
           {loading ? (
-            <div className="catalog-loading">
-              <div className="spinner"></div>
-              <p>Loading spare parts inventory...</p>
+            <div aria-busy="true" aria-live="polite">
+              <div className="catalog-grid" aria-hidden="true">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div className="catalog-card skeleton-card" key={i}>
+                    <div className="skeleton skeleton-image" />
+                    <div className="catalog-card-content">
+                      <div className="skeleton skeleton-line short" />
+                      <div className="skeleton skeleton-line title" />
+                      <div className="skeleton skeleton-line" />
+                      <div className="skeleton skeleton-line" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="catalog-loading-note">
+                {slowLoad
+                  ? 'Waking up the server, this can take up to a minute the first time…'
+                  : 'Loading spare parts inventory…'}
+              </p>
             </div>
           ) : filteredItems.length === 0 ? (
             <div className="catalog-empty">
