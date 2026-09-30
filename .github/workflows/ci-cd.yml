@@ -1,5 +1,11 @@
 name: CI/CD
 
+# Frontend -> Vercel, Backend -> Render.
+#  * Pull requests: run CI only (build + tests), never deploy.
+#  * Pushes to main: run CI for whatever changed, then deploy only the side(s)
+#    that changed, and only if CI passed for BOTH sides.
+#  * Manual run ("Run workflow"): treated as "everything changed", deploys both.
+
 on:
   push:
     branches: [main]
@@ -7,21 +13,55 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Cancel superseded runs on the same branch/PR
 concurrency:
   group: ci-cd-${{ github.ref }}
+  # Never cancel a running deploy; only supersede stale PR runs.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
+  pull-requests: read
 
 env:
   NODE_VERSION: 20
 
 jobs:
-  # ---------------------------------------------------------------- CI
+  # ------------------------------------------------------------ change detection
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      frontend: ${{ steps.out.outputs.frontend }}
+      backend: ${{ steps.out.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+              - '.github/workflows/ci-cd.yml'
+            backend:
+              - 'backend/**'
+              - 'render.yaml'
+              - '.github/workflows/ci-cd.yml'
+      - id: out
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "frontend=true" >> "$GITHUB_OUTPUT"
+            echo "backend=true"  >> "$GITHUB_OUTPUT"
+          else
+            echo "frontend=${{ steps.filter.outputs.frontend }}" >> "$GITHUB_OUTPUT"
+            echo "backend=${{ steps.filter.outputs.backend }}"  >> "$GITHUB_OUTPUT"
+          fi
+
+  # ------------------------------------------------------------------------- CI
   frontend:
     name: Frontend - build
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -36,8 +76,7 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run build
-      - name: Upload build for inspection
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: frontend-dist
           path: frontend/dist
@@ -45,6 +84,8 @@ jobs:
 
   backend:
     name: Backend - syntax check and API tests
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -62,53 +103,79 @@ jobs:
         run: find . -name node_modules -prune -o -name '*.js' -print0 | xargs -0 -n1 node --check
       - run: npm test
 
-  # ---------------------------------------------------------------- CD
-  # Deploy jobs only run on pushes to main, after both CI jobs pass, and skip
-  # themselves cleanly if their secrets are not configured.
+  # ------------------------------------------------------------------------- CD
+  # A skipped CI job (nothing changed on that side) is fine; a failed or
+  # cancelled one blocks every deploy.
   deploy-backend:
     name: Deploy backend (Render)
-    needs: [frontend, backend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [changes, frontend, backend]
+    if: >-
+      always()
+      && github.event_name != 'pull_request'
+      && github.ref == 'refs/heads/main'
+      && needs.changes.outputs.backend == 'true'
+      && !contains(needs.*.result, 'failure')
+      && !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     environment: production
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      BACKEND_URL: ${{ vars.BACKEND_URL }}
     steps:
-      - name: Trigger Render deploy
-        env:
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: |
-          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
-            echo "RENDER_DEPLOY_HOOK_URL not set - skipping (Render's own auto-deploy is in charge)."
-            exit 0
-          fi
-          curl --fail --silent --show-error -X POST "$RENDER_DEPLOY_HOOK_URL"
-          echo "Render deploy triggered."
-      - name: Wait for backend to be healthy
-        env:
-          BACKEND_URL: ${{ vars.BACKEND_URL }}
-          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      - name: Check configuration
+        id: cfg
         run: |
           if [ -z "$RENDER_DEPLOY_HOOK_URL" ] || [ -z "$BACKEND_URL" ]; then
-            echo "Nothing to verify - skipping."
-            exit 0
+            echo "::warning title=Backend deploy skipped::Set the RENDER_DEPLOY_HOOK_URL secret and BACKEND_URL variable (and turn off Render Auto-Deploy) to deploy from CI."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
           fi
-          # Give Render a moment to start the new build, then poll (free tier can be slow)
-          sleep 60
-          for i in $(seq 1 30); do
+
+      - name: Trigger Render deploy
+        if: steps.cfg.outputs.enabled == 'true'
+        run: |
+          curl --fail --silent --show-error -X POST "$RENDER_DEPLOY_HOOK_URL" > /dev/null
+          echo "Render deploy triggered for ${GITHUB_SHA::7}."
+
+      - name: Wait until the new version is live
+        if: steps.cfg.outputs.enabled == 'true'
+        run: |
+          # Render's free tier is slow to build and to wake up; poll generously.
+          sleep 90
+          for i in $(seq 1 40); do
             if curl --fail --silent --max-time 30 "$BACKEND_URL/api/health" | grep -q '"success":true'; then
-              echo "Backend healthy."
+              echo "Backend healthy after $i check(s)."
               exit 0
             fi
-            echo "Attempt $i: not healthy yet, retrying in 20s..."
-            sleep 20
+            echo "Check $i: not healthy yet, retrying in 15s..."
+            sleep 15
           done
-          echo "::error::Backend did not become healthy after deploy."
+          echo "::error title=Backend unhealthy::/api/health did not respond OK after the Render deploy."
           exit 1
+
+      - name: Smoke test the deployed API
+        if: steps.cfg.outputs.enabled == 'true'
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 "$BACKEND_URL/api/catalog")
+          [ "$code" = "200" ] || { echo "::error::/api/catalog returned $code"; exit 1; }
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 60 -X POST \
+            -H 'Content-Type: application/json' -d '{"name":"ci-smoke"}' "$BACKEND_URL/api/quotes")
+          [ "$code" = "400" ] || { echo "::error::/api/quotes validation returned $code (expected 400)"; exit 1; }
+          echo "### Backend deployed :white_check_mark:" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit \`${GITHUB_SHA::7}\` is live at $BACKEND_URL" >> "$GITHUB_STEP_SUMMARY"
 
   deploy-frontend:
     name: Deploy frontend (Vercel)
-    needs: [frontend, backend]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [changes, frontend, backend]
+    if: >-
+      always()
+      && github.event_name != 'pull_request'
+      && github.ref == 'refs/heads/main'
+      && needs.changes.outputs.frontend == 'true'
+      && !contains(needs.*.result, 'failure')
+      && !contains(needs.*.result, 'cancelled')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: production
@@ -116,32 +183,39 @@ jobs:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      SITE_URL: ${{ vars.SITE_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Check Vercel credentials
-        id: vercel
+
+      - name: Check configuration
+        id: cfg
         run: |
           if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
-            echo "Vercel secrets not set - skipping (Vercel's Git integration is in charge)."
+            echo "::warning title=Frontend deploy skipped::Set the VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID secrets (and turn off Vercel Git deployments) to deploy from CI."
             echo "enabled=false" >> "$GITHUB_OUTPUT"
           else
             echo "enabled=true" >> "$GITHUB_OUTPUT"
           fi
+
       - name: Deploy to Vercel (production)
-        if: steps.vercel.outputs.enabled == 'true'
+        if: steps.cfg.outputs.enabled == 'true'
         run: |
           npm install --global vercel@latest
           vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
           vercel build --prod --token="$VERCEL_TOKEN"
-          vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN" | tee deploy.log
-      - name: Verify the live site proxies to the API
-        if: steps.vercel.outputs.enabled == 'true' && vars.SITE_URL != ''
-        env:
-          SITE_URL: ${{ vars.SITE_URL }}
+          vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+
+      - name: Verify the live site
+        if: steps.cfg.outputs.enabled == 'true' && vars.SITE_URL != ''
         run: |
           sleep 10
-          curl --fail --silent --max-time 60 "$SITE_URL/api/health" | grep -q '"success":true'
-          echo "Frontend is live and reaching the backend."
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$SITE_URL/")
+          [ "$code" = "200" ] || { echo "::error::Site returned $code"; exit 1; }
+          # /api/* is proxied to Render by frontend/vercel.json; a 200 proves the wiring.
+          curl --fail --silent --max-time 90 "$SITE_URL/api/health" | grep -q '"success":true' \
+            || { echo "::error::Vercel is not proxying /api to the backend"; exit 1; }
+          echo "### Frontend deployed :white_check_mark:" >> "$GITHUB_STEP_SUMMARY"
+          echo "Commit \`${GITHUB_SHA::7}\` is live at $SITE_URL" >> "$GITHUB_STEP_SUMMARY"
